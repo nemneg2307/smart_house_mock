@@ -10,12 +10,12 @@ The following are the features that the physical house model includes (copied fr
 
 ## Input signals
 
-- [ ] Fire alarm - a switch to simulate fire (Values 1 and 0)
+- [x] Fire alarm - a switch to simulate fire (Values 1 and 0)
 - [x] Housebreaking alarm - house door (1 when closed, 0 when open)	           ← Bad naming
-- [ ] Water leakage - a switch to simulate water leakage (Values 1 and 0)
+- [x] Water leakage - a switch to simulate water leakage (Values 1 and 0)
 - [x] Temperature indoors - analog sensor LM35 (Outputs temp as double in format [dd.dd])
 - [x] Temperature outdoors - digital sensor SMT160-30 (Outputs temp as int - will be converted to double value - not tested properly - maybe it gives the double value)
-- [ ] Stove - a switch to simulate the stove (Values 1 and 0)
+- [x] Stove - a switch to simulate the stove (Values 1 and 0)
 - [x] Window - a switch to simulate window open/closed (Values 1 and 0)
 - [x] Electricity consumption - analog sensor (Outputs int value of the voltage)
 - [ ] Twilight automatic system - Light-to-voltage sensor (not tested)
@@ -29,9 +29,9 @@ The following are the features that the physical house model includes (copied fr
 - [x] Indoor light - One lamp inside the house
 - [x] Outdoor light - One lamp outside the house
 - [ ] Housebreaking alarm - a speaker
-- [ ] Fan (not MUX) - a fan mounted on the house’s loft (possible speed control-not checked)
-- [ ] Radiator - Four radiators mounted inside the house
-- [ ] Heating element wind - mounted close to the fan (untested)
+- [x] Fan (not MUX) - a fan mounted on the house’s loft (possible speed control-not checked)
+- [x] Radiator - Four radiators mounted inside the house
+- [x] Heating element wind - mounted close to the fan (untested)
 
 ----
 To track the progres, 
