@@ -17,10 +17,11 @@ public class ControlCenter {
     //static variables
     private static ControlCenter controlCenter;
     private static ArrayList<String> topics = new ArrayList<String>( //Example topics
-            Arrays.asList("indoor_light", "outdoor_light", "alarm",
-                    "fan", "heating_indoor", "heating_wind", "door"));
+            Arrays.asList("indoor_light", "outdoor_light", "alarm", "fan", "fan_speed", "heating_in", "heating_loft",
+                    "auto_mode", "am_temp_value", "leakage", "fire", "stove"));
     private static MqttClient client;
-    private static String prefix = "smart_house/";
+    private static final String prefix = "smart_house/cmd/";
+    private static final String prefixGui = "smart_house/gui/";
 
     SmartHouse smartHouse = SmartHouse.getInstance();
     private House house = smartHouse.getHouse();
@@ -69,7 +70,7 @@ public class ControlCenter {
         new Thread(() -> {
             //Setting up the connection
             String port = "1883";
-            String broker = "tcp://mqtthive.ddns.net" + ":" + port;
+            String broker = "tcp://smart-mqtthive.duckdns.org:1883";
             MemoryPersistence persistence = new MemoryPersistence();
 
             try {
@@ -135,14 +136,18 @@ class MqttMessageListener implements IMqttMessageListener {
     @Override
     public void messageArrived(String var1, MqttMessage var2) throws Exception {
         ControlCenter controlCenter = ControlCenter.getInstance();
+        MqttClient client = controlCenter.smartHouse.client;
         switch (var1){
-            case "smart_house/indoor_light":
+            case "smart_house/cmd/indoor_light":
+                client.publish("smart_house/gui/indoor_light", var2);
                 controlCenter.getHouse().setIndoorLight(Boolean.parseBoolean(var2.toString()));
                 break;
-            case "smart_house/outdoor_light":
+            case "smart_house/cmd/outdoor_light":
+                client.publish("smart_house/gui/outdoor_light", var2);
                 controlCenter.getHouse().setOutdoorLight(Boolean.parseBoolean(var2.toString()));
                 break;
-            case "smart_house/alarm":
+            case "smart_house/cmd/alarm":
+                client.publish("smart_house/gui/alarm", var2);
                 controlCenter.getHouse().setAlarmArmed(Boolean.parseBoolean(var2.toString()));
                 controlCenter.togglePausePlayAlarm();
                 if(controlCenter.getHouse().isAlarmArmed() && !controlCenter.getHouse().isDoorClosed()){
@@ -151,21 +156,61 @@ class MqttMessageListener implements IMqttMessageListener {
                     controlCenter.smartHouse.setIntruderInHouse(false);
                 }
                 break;
-            case "smart_house/fan":
+            case "smart_house/cmd/fan":
+                client.publish("smart_house/gui/fan", var2);
                 controlCenter.getHouse().setFanOn(Boolean.parseBoolean(var2.toString()));
                 break;
-            case "smart_house/heating_indoor":
+            case "smart_house/cmd/fan_speed":
+                client.publish("smart_house/gui/fan_speed", var2);
+                controlCenter.getHouse().setFanSpeed(Integer.parseInt(var2.toString()));
+                break;
+            case "smart_house/cmd/heating_in":
+                client.publish("smart_house/gui/heating_in", var2);
                 controlCenter.getHouse().setIndoorHeatOn(Boolean.parseBoolean(var2.toString()));
                 break;
-            case "smart_house/heating_wind":
+            case "smart_house/cmd/heating_loft":
+                client.publish("smart_house/gui/heating_loft", var2);
                 controlCenter.getHouse().setWindHeatOn(Boolean.parseBoolean(var2.toString()));
                 break;
-            case "smart_house/door":
+            case "smart_house/cmd/auto_mode":
+                client.publish("smart_house/gui/auto_mode", var2);
+                controlCenter.getHouse().setAutoMode(Boolean.parseBoolean(var2.toString()));
+                break;
+            case "smart_house/cmd/am_temp_value":
+                client.publish("smart_house/gui/am_temp_value", var2);
+                controlCenter.getHouse().setAmTemp(Integer.parseInt(var2.toString()));
+                break;
+            case "smart_house/cmd/door":
+                client.publish("smart_house/gui/door", var2);
                 controlCenter.getHouse().setDoorClosed(Boolean.parseBoolean(var2.toString()));
                 controlCenter.togglePausePlayAlarm();
                 if(controlCenter.getHouse().isAlarmArmed() && !controlCenter.getHouse().isDoorClosed()){
                     controlCenter.smartHouse.setIntruderInHouse(true);
                 }
+                break;
+            case "smart_house/cmd/window":
+                client.publish("smart_house/gui/window", var2);
+                controlCenter.getHouse().setWindowOpen(Boolean.parseBoolean(var2.toString()));
+                break;
+            case "smart_house/cmd/leakage":
+                client.publish("smart_house/gui/leakage", var2);
+                controlCenter.getHouse().setWaterLeakageActive(Boolean.parseBoolean(var2.toString()));
+                break;
+            case "smart_house/cmd/fire":
+                client.publish("smart_house/gui/fire", var2);
+                controlCenter.getHouse().setFireActive(Boolean.parseBoolean(var2.toString()));
+                break;
+            case "smart_house/cmd/stove":
+                client.publish("smart_house/gui/stove", var2);
+                controlCenter.getHouse().setStoveOn(Boolean.parseBoolean(var2.toString()));
+                break;
+            case "smart_house/cmd/twilight":
+                client.publish("smart_house/gui/twilight", var2);
+                controlCenter.getHouse().setTwilightSensor(Integer.parseInt(var2.toString()));
+                break;
+            case "smart_house/cmd/power_cut":
+                client.publish("smart_house/gui/power_cut", var2);
+                controlCenter.getHouse().setPowerCut(Integer.parseInt(var2.toString()));
                 break;
         }
         System.out.println("reply topic  : " + var1);

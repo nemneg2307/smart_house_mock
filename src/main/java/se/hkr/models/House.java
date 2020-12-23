@@ -24,6 +24,9 @@ public class House {
     private boolean windHeatOn = false;
     public boolean fanOn = false;
     public int fanSpeed = 0;
+    private boolean autoMode = false;
+    private int amTemp = 0;
+    private int twilightSensor = 120;
 
 
     public House() {
@@ -155,5 +158,29 @@ public class House {
 
     public void setFanSpeed(int fanSpeed) {
         this.fanSpeed = fanSpeed;
+    }
+
+    public boolean isAutoMode() {
+        return autoMode;
+    }
+
+    public void setAutoMode(boolean autoMode) {
+        this.autoMode = autoMode;
+    }
+
+    public int getAmTemp() {
+        return amTemp;
+    }
+
+    public void setAmTemp(int amTemp) {
+        this.amTemp = amTemp;
+    }
+
+    public int getTwilightSensor() {
+        return twilightSensor;
+    }
+
+    public void setTwilightSensor(int twilightSensor) {
+        this.twilightSensor = twilightSensor;
     }
 }
